@@ -7,7 +7,7 @@ from scipy.stats import spearmanr
 from tqdm import tqdm
 
 # Get dataframe from DB
-DB = "C:/Users/eirik/OneDrive/Documents/Cloudkit/Database/"
+DB = "C:/Users/eirik/Codebase/Database/"
 
 def spearman_ranker(tickerlist:list, metric):
 

@@ -28,7 +28,7 @@ pd.set_option('display.width', 1000)
 print("Booting "+__v_name__+" v "+__v_number__+"...")\
 
 # Databases
-DB = "C:/Users/eirik/OneDrive/Documents/Cloudkit/Database/"
+DB = "C:/Users/eirik/Codebase/Database/"
 
 # ticker Data
 df_tickers = pd.read_csv(f"{DB}master__tickers.csv")

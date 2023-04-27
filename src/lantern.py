@@ -29,165 +29,6 @@ warnings.filterwarnings("ignore")
 VERSION_NAME = "Lantern"
 VERSION_NUMBER = "1.0"
 
-#print("Booting "+VERSION_NAME+" v "+VERSION_NUMBER+"...")
-
-# def calculate_metric_q(dataframe, metric):
-#     """ Calculates standard metrics for quarterly data"""
-#     dataframe[f"{metric} -"] = (
-#         pd.to_numeric(dataframe[f"{metric}"], errors = "coerce")
-#         .fillna(0)
-#         .mul(1000000)
-#     )
-#     dataframe[f"{metric} - QoQ"] = (
-#             dataframe[f"{metric} -"]
-#             .pct_change(1)
-#             .fillna(0)
-#             .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-#     dataframe[f"{metric} - YoY"] = (
-#         dataframe[f"{metric} -"]
-#         .pct_change(4)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-
-
-# def calculate_metric_q_nomult(dataframe, metric):
-#     """ Calculates standard metrics for quarterly data without multiplication"""
-#     dataframe[f"{metric} -"] = (
-#         pd.to_numeric(dataframe[f"{metric}"], errors = "coerce")
-#         .fillna(0)
-#         #.mul(1000000)
-#     )
-#     dataframe[f"{metric} - QoQ"] = (
-#             dataframe[f"{metric} -"]
-#             .pct_change(1)
-#             .fillna(0)
-#             .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-#     dataframe[f"{metric} - YoY"] = (
-#         dataframe[f"{metric} -"]
-#         .pct_change(4)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-
-# def calculate_metric_ttm(dataframe, metric):
-#     """ Calculates standard metrics for trailing twelve month data"""
-#     dataframe[f"{metric} -"] = (
-#         pd.to_numeric(dataframe[f"{metric}"], errors = "coerce")
-#         .fillna(0)
-#         .mul(1000000)
-#     )
-#     dataframe[f"{metric} TTM"] = dataframe[f"{metric} -"].rolling(4).sum()
-#     dataframe[f"{metric} TTM - QoQ"] = (
-#         dataframe[f"{metric} TTM"]
-#         .pct_change(1)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-#     dataframe[f"{metric} TTM - YoY"] = (
-#         dataframe[f"{metric} TTM"]
-#         .pct_change(4)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-#     dataframe[f"{metric} TTM - 5Y CAGR"] = (
-#         pow(dataframe[f"{metric} TTM"]
-#         .pct_change(20)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x) + 1, 0.2) - 1
-#     )
-
-
-# def calculate_metric_ttm_nomult(dataframe, metric):
-#     """ Calculates standard metrics for trailing twelve month data"""
-#     dataframe[f"{metric} -"] = (
-#         pd.to_numeric(dataframe[f"{metric}"], errors = "coerce")
-#         .fillna(0)
-#         #.mul(1000000)
-#     )
-#     dataframe[f"{metric} TTM"] = dataframe[f"{metric} -"].rolling(4).sum()
-#     dataframe[f"{metric} TTM - QoQ"] = (
-#         dataframe[f"{metric} TTM"]
-#         .pct_change(1)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-#     dataframe[f"{metric} TTM - YoY"] = (
-#         dataframe[f"{metric} TTM"]
-#         .pct_change(4)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-#     dataframe[f"{metric} TTM - 5Y CAGR"] = (
-#         pow(dataframe[f"{metric} TTM"]
-#         .pct_change(20)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x) + 1, 0.2) - 1
-#     )
-
-# def calculate_metric_static(dataframe, metric):
-#     """ Calculates standard metrics for static data """
-#     dataframe[f"{metric} -"] = (
-#         pd.to_numeric(dataframe[f"{metric}"], errors = "coerce")
-#         .fillna(0)
-#         .mul(1000000)
-#     )
-#     dataframe[f"{metric} - QoQ"] = (
-#         dataframe[f"{metric} -"]
-#         .pct_change(1)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-#     dataframe[f"{metric} - YoY"] = (
-#         dataframe[f"{metric} -"]
-#         .pct_change(4)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-#     dataframe[f"{metric} - 5Y CAGR"] = (
-#         pow(dataframe[f"{metric} -"]
-#         .pct_change(20)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x) + 1, 0.2) - 1
-#     )
-
-# def calculate_metric_static_percentage(dataframe, metric):
-#     """ Calculates standard metrics for static data """
-#     dataframe[f"{metric} -"] = (
-#         pd.to_numeric(dataframe[f"{metric}"], errors = "coerce")
-#         .fillna(0)
-#         .div(100)
-#     )
-#     dataframe[f"{metric} - QoQ"] = (
-#         dataframe[f"{metric} -"]
-#         .pct_change(1)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-#     dataframe[f"{metric} - YoY"] = (
-#         dataframe[f"{metric} -"]
-#         .pct_change(4)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x)
-#     )
-#     dataframe[f"{metric} - 5Y CAGR"] = (
-#         pow(dataframe[f"{metric} -"]
-#         .pct_change(20)
-#         .fillna(0)
-#         .apply(lambda x: 0 if not np.isfinite(x) else x) + 1, 0.2) - 1
-#     )
-
-
-# def calculate_quantiles(dataframe, numerator, denominator, product_name):
-#     """Calculate the upper and lower quantiles of a relative metric"""
-#     dataframe[f"{product_name}"] = dataframe[f"{numerator}"]/dataframe[f"{denominator}"] * 100
-#     dataframe[f"{product_name} Lower Quintile"] = (
-#         dataframe[f"{product_name}"].rolling(1460).quantile(.15, interpolation = 'midpoint'))
-#     dataframe[f"{product_name} Upper Quintile"] = (
-#         dataframe[f"{product_name}"].rolling(1460).quantile(.85, interpolation = 'midpoint'))
-
 
 def illuminate(ticker):
     """Discovery tool to perform an automated due dilligence on a given equity. 
@@ -198,8 +39,8 @@ def illuminate(ticker):
     """
 
     # Links & Shorthands
-    link_db = "C:/Users/eirik/OneDrive/Documents/Cloudkit/Database"
-    link_pb = "C:/Users/eirik/OneDrive/Documents/Cloudkit/PowerBI Resources"
+    link_db = "C:/Users/eirik/Codebase/Database"
+    link_pb = "C:/Users/eirik/Codebase/Reports/PowerBI Resources"
     link_mt = "https://www.macrotrends.net/stocks/charts"
 
     # Definitions
@@ -660,13 +501,13 @@ def illuminate(ticker):
 
 
     # To Excel
-    with pd.ExcelWriter(f'{link_pb}/BDR.xlsx') as writer: # pylint: disable=abstract-class-instantiated
+    with pd.ExcelWriter(f'{link_pb}/BDR.xlsx') as writer: # type: ignore
         df_price.to_excel(writer, sheet_name='Price Data', index = False)
 
         try:
             df_fundamentals.to_excel(writer, sheet_name='Info', index = False)
 
-        except Exception: #pylint: disable=W,C,R
+        except Exception: 
             pass
 
         df_is.to_excel(writer, sheet_name='Income Statement', index = False)

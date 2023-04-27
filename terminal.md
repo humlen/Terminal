@@ -13,6 +13,7 @@ The mainframe through which all MSMF projects will be launched through.
 + moving over to new UI rendering a curses app instead of plain terminal
 + now draws borders and title that persist throughout app lifecycle
 + added instruction panel in the bottom row
++ remade folder structure into Codebase
 
 ### Version: 1.0
 

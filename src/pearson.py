@@ -7,7 +7,7 @@ from scipy.stats import pearsonr
 from tqdm import tqdm
 
 # Get dataframe from DB
-DB = "C:/Users/eirik/OneDrive/Documents/Cloudkit/Database/"
+DB = "C:/Users/eirik/Codebase/Database/"
 
 def pearson_ranker(tickerlist:list, metric):
 
