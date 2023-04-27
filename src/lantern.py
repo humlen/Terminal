@@ -81,7 +81,7 @@ def illuminate(ticker):
             value = items.split("originalData = ")[1]        # second part is the value [ = "..."]
             value = value.replace(";","")
 
-        except Exception: #pylint: disable=W,C,R
+        except Exception: 
             value = 0
         dict_is[name] = value
 
@@ -95,7 +95,6 @@ def illuminate(ticker):
     df_is = df_is.drop(["popup_icon"], axis = 1)
     df_is = df_is.rename(columns = {'field_name':'Date'})
     df_is.index = df_is["Date"]
-    #df_is.set_index(pd.to_datetime(df_is["Date"]), inplace= True)
     df_is = df_is.drop(["Date"], axis = 1)
     df_is = df_is.T
     df_is = df_is.reset_index()
@@ -104,7 +103,6 @@ def illuminate(ticker):
     # Calculated Values
     df_is = df_is.sort_values(by=["Date"])
 
-    #list_is_short = ["Shares Outstanding"]
     list_is_full_q = [
         "Revenue", "Net Income", "EBITDA", 
         "Operating Expenses","SG&A Expenses"]
@@ -183,7 +181,6 @@ def illuminate(ticker):
     df_bs = df_bs.drop(["popup_icon"], axis = 1)
     df_bs = df_bs.rename(columns = {'field_name':'Date'})
     df_bs.index = df_bs["Date"]
-    #df_bs.set_index(pd.to_datetime(df_bs["Date"]), inplace= True)
     df_bs = df_bs.drop(["Date"], axis = 1)
     df_bs = df_bs.T
     df_bs = df_bs.reset_index()
@@ -334,7 +331,7 @@ def illuminate(ticker):
             value = items.split("originalData = ")[1]        # second part is the value [ = "..."]
             value = value.replace(";","")
 
-        except Exception:   #pylint: disable=W,C,R
+        except Exception:   
             value = 0
         dict_kr[name] = value
 
@@ -347,7 +344,6 @@ def illuminate(ticker):
     df_kr = df_kr.drop(["popup_icon"], axis = 1)
     df_kr = df_kr.rename(columns = {'field_name':'Date'})
     df_kr.index = df_kr["Date"]
-    #df_kr.set_index(pd.to_datetime(df_kr["Date"]), inplace= True)
     df_kr = df_kr.drop(["Date"], axis = 1)
     df_kr = df_kr.T
     df_kr = df_kr.reset_index()
@@ -396,19 +392,7 @@ def illuminate(ticker):
     calculate_quantiles(
         df_price, "Revenue TTM", "Market Capitalization", "Revenue / Market Capitalization")
 
-    #df_price["Revenue / Market Capitalization"] = (
-    #    df_price["Revenue TTM"] / df_price["Market Capitalization"] * 100
-    #)
-    #df_price["Revenue / Market Capitalization Lower Quintile"] = (
-    #    df_price["Revenue / Market Capitalization"]
-    #    .rolling(1460).quantile(.15, interpolation = 'midpoint')
-    #)
-    #df_price["Revenue / Market Capitalization Upper Quintile"] = (
-    #    df_price["Revenue / Market Capitalization"]
-    #    .rolling(1460).quantile(.85, interpolation = 'midpoint')
-    #)
-
-    # EBITDA / MCap With Quantiles
+        # EBITDA / MCap With Quantiles
     df_ebidta = df_is[["Date","EBITDA TTM"]]
     df_ebidta = df_ebidta.astype({"Date": 'datetime64[ns]'})
     df_price = df_price.merge(df_ebidta, how = "left", left_on = "Date", right_on = "Date")
@@ -417,22 +401,7 @@ def illuminate(ticker):
     calculate_quantiles(
         df_price, "EBITDA TTM", "Market Capitalization", "EBITDA / Market Capitalization")
 
-    #df_price["EBITDA / Market Capitalization"] = (
-    #    df_price["EBITDA TTM"] / df_price["Market Capitalization"] * 100
-    #)
-    #df_price["EBITDA / Market Capitalization Lower Quintile"] = (
-    #    df_price["EBITDA / Market Capitalization"]
-    #    .rolling(1460)
-    #    .quantile(.15, interpolation = 'higher')
-    #)
-    #df_price["EBITDA / Market Capitalization Upper Quintile"] = (
-    #    df_price["EBITDA / Market Capitalization"]
-    #    .rolling(1460)
-    #    .quantile(.85, interpolation = 'higher')
-    #)
-
-
-    # Free Cash Flow / MCap With Quantiles
+        # Free Cash Flow / MCap With Quantiles
     df_fcf = df_cf[["Date","Free Cash Flow TTM"]]
     df_fcf = df_fcf.astype({"Date": 'datetime64[ns]'})
     df_price = df_price.merge(df_fcf, how = "left", left_on = "Date", right_on = "Date")
@@ -451,12 +420,12 @@ def illuminate(ticker):
         .quantile(.85, interpolation = 'lower')
     )
 
-    # Boundary Validity
+        # Boundary Validity
     df_boundarytest = df_price
     df_boundarytest["Daily Change"] = df_boundarytest["Close"].pct_change(1)
     df_boundarytest["Daily Change Norm"] = df_boundarytest["Daily Change"] + 1
 
-    # Finish Price Data
+        # Finish Price Data
     print('Price Data finished in :'+str(round((time.time() - start_time),3))+' Seconds')
 
 
