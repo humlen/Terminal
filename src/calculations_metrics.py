@@ -124,7 +124,6 @@ def calculate_metric_static(dataframe, metric, modifier):
         .fillna(0)
         .apply(lambda x: 0 if not np.isfinite(x) else x) + 1, 0.2) - 1
     )
-
     return dataframe
 
 

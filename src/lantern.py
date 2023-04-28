@@ -12,6 +12,8 @@ import warnings
 import time
 from datetime import datetime
 import json
+# from setuptools import setup, find_packages
+
 
 import pandas as pd
 import yfinance as yf
@@ -20,8 +22,7 @@ from bs4 import BeautifulSoup
 import requests
 from .calculations_metrics import calculate_metric_q, calculate_metric_static,\
     calculate_metric_ttm, calculate_quantiles
-
-
+from .lantern_output import lantern_writer
 # Caveats and config
 warnings.filterwarnings("ignore")
 
@@ -468,21 +469,10 @@ def illuminate(ticker):
     # Finish Fundamental Data
     print('Fundamental Data finished in :'+str(round((time.time() - start_time),3))+' Seconds')
 
+    # Write to Excel
+    lantern_writer(df_is, df_bs, df_cf, df_kr, df_fundamentals, df_price)
 
-    # To Excel
-    with pd.ExcelWriter(f'{link_pb}/BDR.xlsx') as writer: # type: ignore
-        df_price.to_excel(writer, sheet_name='Price Data', index = False)
-
-        try:
-            df_fundamentals.to_excel(writer, sheet_name='Info', index = False)
-
-        except Exception: 
-            pass
-
-        df_is.to_excel(writer, sheet_name='Income Statement', index = False)
-        df_bs.to_excel(writer, sheet_name='Balance Sheet', index = False)
-        df_cf.to_excel(writer, sheet_name='Cash Flow Statement', index = False)
-        df_kr.to_excel(writer, sheet_name = "Key Ratios", index = False)
-
+    # Return datasets
+    return df_is, df_bs, df_cf, df_kr, df_fundamentals
     # End Execution
     print("Execution time:  "+str(round((time.time() - start_time),3 ))+" seconds")

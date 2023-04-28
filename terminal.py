@@ -5,6 +5,7 @@
 @purpose: act as a terminal launcher for all MSMF Protocols
 """
 import sys
+import os
 import warnings
 from src import lantern, eidos
 
@@ -65,6 +66,7 @@ item1 = input("""\nWhat program would you like to try?\n
 
 # Terra Nova
 if item1 == "1":
+    os.system('cls')
     item2 = input(""" \nWhat do you want your sample size to be\n""")
     item2_int = int(item2)
     print("\nrunning Terra Nova Protocol with "+item2+" samples")
@@ -73,6 +75,7 @@ if item1 == "1":
 
 # Terra
 elif item1 == "2":
+    os.system('cls')
     item2 = input(""" \nWhat metric would you like to collect?\n
     1. Revenue
     2. Net Income
@@ -102,12 +105,14 @@ elif item1 == "3":
 
 # Project Lantern
 elif item1 == "4":
+    os.system('cls')
     item2 = input("\nWhat ticker would you like to retrieve\n")
     lantern.illuminate(item2)
 
 
 # Project Eidos
 elif item1 == "5":
+    os.system('cls')
     item2 = input("""\nWhat metric would you like to rank by?
     1. Revenue
     2. Net Income
@@ -122,6 +127,7 @@ elif item1 == "5":
 
 # Info
 elif item1 == "0":
+    os.system('cls')
     print("""
     """+COLOR_OPEN+COLOR_GREEN+f"Welcome to {VERSION_NAME} {VERSION_NUMBER}"
     +COLOR_CLOSE+"""\n Here is some information about the respective tools available in this app:
@@ -144,5 +150,6 @@ elif item1 == "0":
 
 # Invalid Character
 else:
+    os.system('cls')
     print("\nSozzle ma brozzle, canny do that")
 
