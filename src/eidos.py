@@ -44,20 +44,20 @@ def eidos_revenue():
     dataset_revenue = pd.read_csv(f"{DB}master__revenue.csv")
     tickerlist = dataset_revenue["ticker"].unique().tolist()
 
-    # new method
+    # Calculate the three different linearity rankings that we care 
+    # about in this program: Pearson's R, Spearmans Rho and Kendall's 
+    # Tau.
     print("\nCalculating Pearson's R")
     pearson_list, pearson_fails = pearson_ranker(tickerlist,'revenue')    
+    df_pearson_revenue = pd.concat(pearson_list, axis = 0)
     print("\nCalculating Spearman's Rho")
     spearman_list, spearman_fails = spearman_ranker(tickerlist, 'revenue')
+    df_spearman_revenue = pd.concat(spearman_list, axis = 0)
     print("\nCalculating Kendall's Tau")
     kendall_list, kendall_fails = kendall_ranker(tickerlist, 'revenue')
-    
-    # Concatenate dataframes
-    df_spearman_revenue = pd.concat(spearman_list, axis = 0)
-    df_pearson_revenue = pd.concat(pearson_list, axis = 0)
     df_kendall_revenue = pd.concat(kendall_list, axis = 0)
-
-    # Create Scoresheet
+    
+    # Merge datasets together
     df_eidos = df_tickers.merge(
         df_spearman_revenue,
         how="left", left_on="ticker", right_on="ticker", suffixes=("_Spearman", "")
@@ -79,6 +79,8 @@ def eidos_revenue():
                   "kendall tau", "kendall quarters"
                 ]]
     )
+
+    # Filter only qualified companies
     df_eidos = df_eidos.loc[
         (df_eidos["spearman quarters"] > 20)
     ]

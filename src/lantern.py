@@ -11,18 +11,16 @@ from urllib.request import Request, urlopen
 import warnings
 import time
 from datetime import datetime
-import json
-# from setuptools import setup, find_packages
-
+from .scraper_mt import scrape_mt
 
 import pandas as pd
 import yfinance as yf
 import numpy as np
 from bs4 import BeautifulSoup
-import requests
 from .calculations_metrics import calculate_metric_q, calculate_metric_static,\
     calculate_metric_ttm, calculate_quantiles
 from .lantern_output import lantern_writer
+
 # Caveats and config
 warnings.filterwarnings("ignore")
 
@@ -65,45 +63,13 @@ def illuminate(ticker):
     # Lists & Counters
     start_time = time.time()
     ticker = ticker.upper()
-    dict_is, dict_bs, dict_cf, dict_kr = {},{},{},{}
 
     # Launch
     print ('Getting data for ' + comp_b + '...\n')
 
-    # Income Statement
-    html = requests.get(link_is, timeout = 10)
-    soup = BeautifulSoup(html.text, 'html.parser')
-    htmltext = soup.prettify()
-
-    items_is  = htmltext.split("var ")[1:]  # get each var entry
-    for items in items_is:
-        name = items.split("=")[0].strip()  # first part is the var [name = "]
-        try:
-            value = items.split("originalData = ")[1]        # second part is the value [ = "..."]
-            value = value.replace(";","")
-
-        except Exception: 
-            value = 0
-        dict_is[name] = value
-
-    data_is = dict_is["originalData"]
-
-    # Data Formatting - Income Statement
-    data = json.loads(data_is)
-    df_is = pd.DataFrame.from_dict(data)
-    df_is["field_name"] = df_is["field_name"].str.split(">").str[1]
-    df_is["field_name"] = df_is["field_name"].str.split("<").str[0]
-    df_is = df_is.drop(["popup_icon"], axis = 1)
-    df_is = df_is.rename(columns = {'field_name':'Date'})
-    df_is.index = df_is["Date"]
-    df_is = df_is.drop(["Date"], axis = 1)
-    df_is = df_is.T
-    df_is = df_is.reset_index()
-    df_is = df_is.rename(columns = {'index':'Date'})
-
-    # Calculated Values
-    df_is = df_is.sort_values(by=["Date"])
-
+    # Scrape MT
+    df_is = scrape_mt(link_is)
+    
     list_is_full_q = [
         "Revenue", "Net Income", "EBITDA", 
         "Operating Expenses","SG&A Expenses"]
@@ -158,37 +124,7 @@ def illuminate(ticker):
 
 
     # Balance Sheet
-    html = requests.get(link_bs, timeout = 10)
-    soup = BeautifulSoup(html.text, 'html.parser')
-    htmltext = soup.prettify()
-
-    item_bs  = htmltext.split("var ")[1:]  # get each var entry
-    for items in item_bs:
-        name = items.split("=")[0].strip()  # first part is the var [name = "]
-        try:
-            value = items.split("originalData = ")[1]        # second part is the value [ = "..."]
-            value = value.replace(";","")
-        except Exception: #pylint: disable=W,C,R
-            value = 0
-        dict_bs[name] = value           # store it for printing below
-
-    data_bs = dict_bs["originalData"]
-
-    # Data Formatting - Balance Sheet
-    data = json.loads(data_bs)
-    df_bs = pd.DataFrame.from_dict(data)
-    df_bs["field_name"] = df_bs["field_name"].str.split(">").str[1]
-    df_bs["field_name"] = df_bs["field_name"].str.split("<").str[0]
-    df_bs = df_bs.drop(["popup_icon"], axis = 1)
-    df_bs = df_bs.rename(columns = {'field_name':'Date'})
-    df_bs.index = df_bs["Date"]
-    df_bs = df_bs.drop(["Date"], axis = 1)
-    df_bs = df_bs.T
-    df_bs = df_bs.reset_index()
-    df_bs = df_bs.rename(columns = {'index':'Date'})
-
-    # Calculated Values
-    df_bs = df_bs.sort_values(by=["Date"])
+    df_bs = scrape_mt(link_bs)
 
     list_bs_static = ["Cash On Hand","Total Current Assets",
     "Total Current Liabilities","Total Liabilities",
@@ -202,37 +138,7 @@ def illuminate(ticker):
 
 
     # Cash Flow Statement
-    html = requests.get(link_cf, timeout = 10)
-    soup = BeautifulSoup(html.text, 'html.parser')
-    htmltext = soup.prettify()
-
-    item_cf  = htmltext.split("var ")[1:]  # get each var entry
-    for items in item_cf:
-        name = items.split("=")[0].strip()  # first part is the var [name = "]
-        try:
-            value = items.split("originalData = ")[1]        # second part is the value [ = "..."]
-            value = value.replace(";","")
-
-        except Exception:  #pylint: disable=W,C,R
-            value = 0
-        dict_cf[name] = value
-
-    data_cf = dict_cf["originalData"]
-
-    data = json.loads(data_cf)
-    df_cf = pd.DataFrame.from_dict(data)
-    df_cf["field_name"] = df_cf["field_name"].str.split(">").str[1]
-    df_cf["field_name"] = df_cf["field_name"].str.split("<").str[0]
-    df_cf = df_cf.drop(["popup_icon"], axis = 1)
-    df_cf = df_cf.rename(columns = {'field_name':'Date'})
-    df_cf.index = df_cf["Date"]
-    df_cf = df_cf.drop(["Date"], axis = 1)
-    df_cf = df_cf.T
-    df_cf = df_cf.reset_index()
-    df_cf = df_cf.rename(columns = {'index':'Date'})
-
-    # Calculated Values
-    df_cf = df_cf.sort_values(by=["Date"])
+    df_cf = scrape_mt(link_cf)    
 
     list_cf_full = ["Cash Flow From Operating Activities",
     "Cash Flow From Investing Activities","Cash Flow From Financial Activities",
@@ -244,113 +150,107 @@ def illuminate(ticker):
         calculate_metric_ttm(df_cf,list_items,1)
 
     # Capital Expenditure
-    df_cf["Capital Expenditure"] = (
-        df_cf["Total Depreciation And Amortization - Cash Flow"]
-        .fillna(0).astype("float64") + df_cf["Net Change In Property, Plant, And Equipment"]
-        .fillna(0).astype("float64")
-    )
-    df_cf["Capital Expenditure - QoQ"] = (
-        df_cf["Capital Expenditure"]
-        .pct_change(1)
-        .fillna(0)
-        .apply(lambda x: 0 if not np.isfinite(x) else x)
-    )
-    df_cf["Capital Expenditure - YoY"] = (
-        df_cf["Capital Expenditure"]
-        .pct_change(4)
-        .fillna(0)
-        .apply(lambda x: 0 if not np.isfinite(x) else x)
-    )
-    df_cf["Capital Expenditure TTM"] = df_cf["Capital Expenditure"].rolling(4).sum()
-    df_cf["Capital Expenditure TTM - QoQ"] = (
-        df_cf["Capital Expenditure TTM"]
-        .pct_change(1)
-        .fillna(0)
-        .apply(lambda x: 0 if not np.isfinite(x) else x)
-    )
-    df_cf["Capital Expenditure TTM - YoY"] = (
-        df_cf["Capital Expenditure TTM"]
-        .pct_change(4)
-        .fillna(0)
-        .apply(lambda x: 0 if not np.isfinite(x) else x)
-    )
-    df_cf["Capital Expenditure TTM - 5Y CAGR"] = (
-        pow(df_cf['Capital Expenditure TTM']
-            .pct_change(20)
+    
+    try:
+        df_cf["Capital Expenditure"] = (
+            df_cf["Total Depreciation And Amortization - Cash Flow"]
+            .fillna(0).astype("float64") + df_cf["Net Change In Property, Plant, And Equipment"]
+            .fillna(0).astype("float64")
+        )
+        df_cf["Capital Expenditure - QoQ"] = (
+            df_cf["Capital Expenditure"]
+            .pct_change(1)
             .fillna(0)
-            .apply(lambda x: 0 if not np.isfinite(x) else x) + 1, 0.2) - 1
-    )
+            .apply(lambda x: 0 if not np.isfinite(x) else x)
+        )
+        df_cf["Capital Expenditure - YoY"] = (
+            df_cf["Capital Expenditure"]
+            .pct_change(4)
+            .fillna(0)
+            .apply(lambda x: 0 if not np.isfinite(x) else x)
+        )
+        df_cf["Capital Expenditure TTM"] = df_cf["Capital Expenditure"].rolling(4).sum()
+        df_cf["Capital Expenditure TTM - QoQ"] = (
+            df_cf["Capital Expenditure TTM"]
+            .pct_change(1)
+            .fillna(0)
+            .apply(lambda x: 0 if not np.isfinite(x) else x)
+        )
+        df_cf["Capital Expenditure TTM - YoY"] = (
+            df_cf["Capital Expenditure TTM"]
+            .pct_change(4)
+            .fillna(0)
+            .apply(lambda x: 0 if not np.isfinite(x) else x)
+        )
+        df_cf["Capital Expenditure TTM - 5Y CAGR"] = (
+            pow(df_cf['Capital Expenditure TTM']
+                .pct_change(20)
+                .fillna(0)
+                .apply(lambda x: 0 if not np.isfinite(x) else x) + 1, 0.2) - 1
+        )
+    
+    except:
+        df_cf["Capital Expenditure"] = 0
+        df_cf["Capital Expenditure - QoQ"] = 0
+        df_cf["Capital Expenditure - YoY"] = 0
+        df_cf["Capital Expenditure TTM"] = 0
+        df_cf["Capital Expenditure TTM - QoQ"] = 0
+        df_cf["Capital Expenditure TTM - YoY"] = 0
+        df_cf["Capital Expenditure TTM - 5Y CAGR"] = 0
+
 
         # Free Cash Flow
-    df_cf["Free Cash Flow"] = (
-        df_cf["Cash Flow From Operating Activities -"] - df_cf["Capital Expenditure"]
-    )
-    df_cf["Free Cash Flow - QoQ"] = (
-        df_cf["Free Cash Flow"]
-        .pct_change(1)
-        .fillna(0)
-        .apply(lambda x: 0 if not np.isfinite(x) else x)
-    )
-    df_cf["Free Cash Flow - YoY"] = (
-        df_cf["Free Cash Flow"]
-        .pct_change(4)
-        .fillna(0).apply(lambda x: 0 if not np.isfinite(x) else x)
-    )
-    df_cf["Free Cash Flow TTM"] = df_cf["Free Cash Flow"].rolling(4).sum()
-    df_cf["Free Cash Flow TTM - QoQ"] = (
-        df_cf["Free Cash Flow TTM"]
-        .pct_change(1)
-        .fillna(0)
-        .apply(lambda x: 0 if not np.isfinite(x) else x)
-    )
-    df_cf["Free Cash Flow TTM - YoY"] = (
-        df_cf["Free Cash Flow TTM"]
-        .pct_change(4)
-        .fillna(0)
-        .apply(lambda x: 0 if not np.isfinite(x) else x)
-    )
-    df_cf["Free Cash Flow TTM - 5Y CAGR"] = (
-        pow(df_cf['Free Cash Flow TTM']
-            .pct_change(20)
+    try: 
+        df_cf["Free Cash Flow"] = (
+            df_cf["Cash Flow From Operating Activities -"] - df_cf["Capital Expenditure"]
+        )
+        df_cf["Free Cash Flow - QoQ"] = (
+            df_cf["Free Cash Flow"]
+            .pct_change(1)
             .fillna(0)
-            .apply(lambda x: 0 if not np.isfinite(x) else x) + 1, 0.2) - 1
-    )
+            .apply(lambda x: 0 if not np.isfinite(x) else x)
+        )
+        df_cf["Free Cash Flow - YoY"] = (
+            df_cf["Free Cash Flow"]
+            .pct_change(4)
+            .fillna(0).apply(lambda x: 0 if not np.isfinite(x) else x)
+        )
+        df_cf["Free Cash Flow TTM"] = df_cf["Free Cash Flow"].rolling(4).sum()
+        df_cf["Free Cash Flow TTM - QoQ"] = (
+            df_cf["Free Cash Flow TTM"]
+            .pct_change(1)
+            .fillna(0)
+            .apply(lambda x: 0 if not np.isfinite(x) else x)
+        )
+        df_cf["Free Cash Flow TTM - YoY"] = (
+            df_cf["Free Cash Flow TTM"]
+            .pct_change(4)
+            .fillna(0)
+            .apply(lambda x: 0 if not np.isfinite(x) else x)
+        )
+        df_cf["Free Cash Flow TTM - 5Y CAGR"] = (
+            pow(df_cf['Free Cash Flow TTM']
+                .pct_change(20)
+                .fillna(0)
+                .apply(lambda x: 0 if not np.isfinite(x) else x) + 1, 0.2) - 1
+        )
+
+    except:
+        df_cf["Free Cash Flow"] = 0
+        df_cf["Free Cash Flow - QoQ"] = 0
+        df_cf["Free Cash Flow - YoY"] = 0
+        df_cf["Free Cash Flow TTM"] = 0
+        df_cf["Free Cash Flow TTM - QoQ"] = 0
+        df_cf["Free Cash Flow TTM - YoY"] = 0
+        df_cf["Free Cash Flow TTM - 5Y CAGR"] = 0
+
 
     # Finish Cash Flow Statement
     print('Cash Flow Statement finished in :'+str(round((time.time() - start_time),3))+' Seconds')
 
     # Key Ratios
-    html = requests.get(link_kr, timeout = 10)
-    soup = BeautifulSoup(html.text, 'html.parser')
-    htmltext = soup.prettify()
+    df_kr = scrape_mt(link_kr)
 
-    item_kr  = htmltext.split("var ")[1:]  # get each var entry
-    for items in item_kr:
-        name = items.split("=")[0].strip()  # first part is the var [name = "]
-        try:
-            value = items.split("originalData = ")[1]        # second part is the value [ = "..."]
-            value = value.replace(";","")
-
-        except Exception:   
-            value = 0
-        dict_kr[name] = value
-
-    data_kr = dict_kr["originalData"]
-
-    data = json.loads(data_kr)
-    df_kr = pd.DataFrame.from_dict(data)
-    df_kr["field_name"] = df_kr["field_name"].str.split(">").str[1]
-    df_kr["field_name"] = df_kr["field_name"].str.split("<").str[0]
-    df_kr = df_kr.drop(["popup_icon"], axis = 1)
-    df_kr = df_kr.rename(columns = {'field_name':'Date'})
-    df_kr.index = df_kr["Date"]
-    df_kr = df_kr.drop(["Date"], axis = 1)
-    df_kr = df_kr.T
-    df_kr = df_kr.reset_index()
-    df_kr = df_kr.rename(columns = {'index':'Date'})
-
-    # Calculated Values
-    df_kr = df_kr.sort_values(by=["Date"])
     list_kr_static_percentage = ["Gross Margin","Operating Margin","ROI - Return On Investment"]
 
     for list_items in list_kr_static_percentage:

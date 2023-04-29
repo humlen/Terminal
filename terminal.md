@@ -6,7 +6,7 @@ The mainframe through which all MSMF projects will be launched through.
 
 ## Changelog
 
-### Version: 2.0 [WIP]
+### Version: 1.1 [WIP]
 
 ---
 
@@ -27,8 +27,9 @@ The mainframe through which all MSMF projects will be launched through.
 
 #### Lantern
 + added final timer to lantern fetch
++ moved macrotrends scrape and formatting to function
 
-- write function for Lantern html fetch and data formatting
+
 - change diagnostics to add Filter Rate & Failure Rate
 - change Eidos scoring to select top 10 from each sector
 
