@@ -226,7 +226,6 @@ def illuminate(ticker):
     df_cf = df_cf.drop(["popup_icon"], axis = 1)
     df_cf = df_cf.rename(columns = {'field_name':'Date'})
     df_cf.index = df_cf["Date"]
-    #df_cf.set_index(pd.to_datetime(df_cf["Date"]), inplace= True)
     df_cf = df_cf.drop(["Date"], axis = 1)
     df_cf = df_cf.T
     df_cf = df_cf.reset_index()
@@ -471,8 +470,9 @@ def illuminate(ticker):
 
     # Write to Excel
     lantern_writer(df_is, df_bs, df_cf, df_kr, df_fundamentals, df_price)
-
-    # Return datasets
-    return df_is, df_bs, df_cf, df_kr, df_fundamentals
-    # End Execution
+    print('Excel Export finished in :'+str(round((time.time() - start_time),3))+' Seconds')
+    
+    # Return datasets and end execution
     print("Execution time:  "+str(round((time.time() - start_time),3 ))+" seconds")
+    return df_is, df_bs, df_cf, df_kr, df_fundamentals
+

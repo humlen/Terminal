@@ -9,7 +9,7 @@ import warnings
 
 import pandas as pd
 
-from .pearson import pearson_ranker
+from .pearson import pearson_ranker, pearson_ranker_old
 from .spearman import spearman_ranker # type: ignore
 
 warnings.filterwarnings("ignore")
@@ -44,8 +44,10 @@ def eidos_revenue():
     dataset_revenue = pd.read_csv(f"{DB}master__revenue.csv")
     tickerlist = dataset_revenue["ticker"].unique().tolist()
 
-    # new method 
+    # new method
+    print("\nCalculating Pearson linearity")
     pearson_list, pearson_fails = pearson_ranker(tickerlist,'revenue')    
+    print("\nCalculating Spearman linearity")
     spearman_list, spearman_fails = spearman_ranker(tickerlist, 'revenue')
 
     # Concatenate dataframes
@@ -107,7 +109,7 @@ def eidos_revenue():
     print(df_gold_revenue)
 
     # Diagnostics
-    print(f"""Diagnostics:
+    print(f"""\nDiagnostics:
     Total Equities Ranked: {len(df_eidos.index)}
     Missing Pearson Scores: {pearson_fails}
     Missing Spearman Scores: {spearman_fails}
@@ -129,7 +131,9 @@ def eidos_netinc():
     tickerlist = dataset_netinc["ticker"].unique().tolist()
    
    # new
+    print("\nCalculating Pearson linearity")
     pearson_list, pearson_fails = pearson_ranker(tickerlist,'netincome')    
+    print("\nCalculating Spearman linearity")
     spearman_list, spearman_fails = spearman_ranker(tickerlist, 'netincome')
 
     # Concatenate dataframes
@@ -188,7 +192,7 @@ def eidos_netinc():
     print(df_gold_netinc)
 
     # Diagnostics
-    print(f"""Diagnostics:
+    print(f"""\nDiagnostics:
     Total Equities Ranked: {len(df_eidos.index)}
     Missing Pearson Scores: {pearson_fails}
     Missing Spearman Scores: {spearman_fails}
@@ -210,7 +214,9 @@ def eidos_eps():
     tickerlist = dataset_eps["ticker"].unique().tolist()
 
     # new
+    print("\nCalculating Pearson linearity")
     pearson_list, pearson_fails = pearson_ranker(tickerlist,'eps')    
+    print("\nCalculating Spearman linearity")
     spearman_list, spearman_fails = spearman_ranker(tickerlist, 'eps')
     
     # Concatenate dataframes
@@ -261,10 +267,42 @@ def eidos_eps():
     print(df_gold_eps)
 
     # Diagnostics
-    print(f"""Diagnostics:
+    print(f"""\nDiagnostics:
     Total Equities Ranked: {len(df_eidos.index)}
     Missing Pearson Scores: {pearson_fails}
     Missing Spearman Scores: {spearman_fails}
     Success Rate: {100*round((len(df_eidos.index)-pearson_fails-spearman_fails)/len(df_eidos.index),2)}%
     Time Elapsed: {round(time.time()-start_time,2)} Seconds
     """)
+
+
+
+
+def eidos_test():
+
+    
+    # Start your engines
+    start_time = time.time()
+
+    # Get Unique Data
+    dataset_eps = pd.read_csv(f"{DB}master__test.csv")
+    tickerlist = dataset_eps["ticker"].tolist()#.unique().tolist()
+
+    # new
+    print("\nCalculating Pearson linearity v1")
+    pearson_list, pearson_fails = pearson_ranker_old(tickerlist,'revenue')   
+    print("\nCalculating Pearson linearity v2")
+    pearson_list_2, pearson_fails_2 = pearson_ranker(tickerlist,'revenue')
+    
+    # Concatenate dataframes
+    df_pearson_eps_v1 = pd.concat(pearson_list, axis = 0)
+    df_pearson_eps_v2 = pd.concat(pearson_list_2, axis = 0)
+
+    print("Pearson Old")
+    print(df_pearson_eps_v1.head(10))
+    print("\nPearson New")
+    print(df_pearson_eps_v2.head(10))
+
+    print(f"Pearson fails 1: {pearson_fails}") 
+    print(f"Pearson fails 2: {pearson_fails_2}")
+

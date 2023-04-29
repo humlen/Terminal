@@ -9,7 +9,7 @@ from tqdm import tqdm
 # Get dataframe from DB
 DB = "C:/Users/eirik/Codebase/Database/"
 
-def spearman_ranker(tickerlist:list, metric):
+def spearman_ranker_old(tickerlist:list, metric):
 
     # Call & Create variables
     df_metric = pd.read_csv(f"{DB}master__{metric}.csv")
@@ -22,6 +22,7 @@ def spearman_ranker(tickerlist:list, metric):
 
         try:
             # Attempt to calculate spearman r for the metric
+            # PERF: Not optimized. Write to multithread
             dataframe = df_metric[(df_metric["ticker"] == ticker)]
             dataframe.reset_index(drop=True, inplace = True)
             df_spearman_single =(
@@ -55,4 +56,52 @@ def spearman_ranker(tickerlist:list, metric):
         list_spearman.append(df_spearman)
 
     return list_spearman, fails
+
+
+def spearman_ranker(tickerlist:list, metric):
+
+    # Call & Create variables
+    df_metric = pd.read_csv(f"{DB}master__{metric}.csv")
+    fails = 0
+    list_spearman = []
+    groups = df_metric.groupby(df_metric['ticker'])
+
+    for i in tqdm(range(len(tickerlist))):
+        ticker = tickerlist[i]
+        
+        try:
+            group = groups.get_group(ticker)
+            x = group.index.to_numpy()
+            y = group[f"ttm {metric}"]
+
+            df_spearman_single = (
+                [[ticker,
+                metric,
+                spearmanr(x,y).statistic, #type: ignore
+                len(x)]]
+            )
+
+        except:
+            fails += 1
+            df_spearman_single = (
+                [[ticker,
+                metric,
+                0,
+                0]]
+            )
+
+        df_spearman = (
+            pd.DataFrame(
+                df_spearman_single,
+                columns = ['ticker','metric','spearman r','spearman quarters']
+            )
+        )
+
+        list_spearman.append(df_spearman)
+
+    return list_spearman, fails
+
+
+
+
 

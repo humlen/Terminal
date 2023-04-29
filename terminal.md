@@ -10,10 +10,18 @@ The mainframe through which all MSMF projects will be launched through.
 
 ---
 
-+ moving over to new UI rendering a curses app instead of plain terminal
-+ now draws borders and title that persist throughout app lifecycle
-+ added instruction panel in the bottom row
 + remade folder structure into Codebase
++ added feedback to eidos calculations
++ added final timer to lantern fetch
++ added startup timer for terminal.py
++ rewrote pearson to 2.2k it/s 
++ rewrote spearman to 2.2k it/s 
+
+- write function for Lantern html fetch and data formatting
+- run eidos multithreaded to hit 1000 it/s
+- find a way to load imports rather than lazy loading
+- add Kendall's Tau in project Eidos
+- change diagnostics to add Filter Rate & Failure Rate
 
 ### Version: 1.0
 
