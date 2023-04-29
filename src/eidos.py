@@ -9,9 +9,9 @@ import warnings
 
 import pandas as pd
 
+from .kendall import kendall_ranker
 from .pearson import pearson_ranker, pearson_ranker_old
 from .spearman import spearman_ranker # type: ignore
-
 warnings.filterwarnings("ignore")
 
 
@@ -45,34 +45,45 @@ def eidos_revenue():
     tickerlist = dataset_revenue["ticker"].unique().tolist()
 
     # new method
-    print("\nCalculating Pearson linearity")
+    print("\nCalculating Pearson's R")
     pearson_list, pearson_fails = pearson_ranker(tickerlist,'revenue')    
-    print("\nCalculating Spearman linearity")
+    print("\nCalculating Spearman's Rho")
     spearman_list, spearman_fails = spearman_ranker(tickerlist, 'revenue')
-
+    print("\nCalculating Kendall's Tau")
+    kendall_list, kendall_fails = kendall_ranker(tickerlist, 'revenue')
+    
     # Concatenate dataframes
     df_spearman_revenue = pd.concat(spearman_list, axis = 0)
     df_pearson_revenue = pd.concat(pearson_list, axis = 0)
+    df_kendall_revenue = pd.concat(kendall_list, axis = 0)
 
     # Create Scoresheet
     df_eidos = df_tickers.merge(
         df_spearman_revenue,
         how="left", left_on="ticker", right_on="ticker", suffixes=("_Spearman", "")
         )
+
     df_eidos = df_eidos.merge(
         df_pearson_revenue, how="left", left_on="ticker",
         right_on="ticker", suffixes=("_Pearson", "")
-    )
+        )
+
+    df_eidos = df_eidos.merge(
+        df_kendall_revenue, how = 'left', left_on = 'ticker',
+        right_on = 'ticker', suffixes = ('_Kendall','')
+        )
+
     df_eidos = (
         df_eidos[["ticker", "comp_name_2", "sector", "zacks_x_ind_desc",
-                  "pearson r", "pearson quarters", "spearman r", "spearman quarters"
+                  "pearson r", "pearson quarters", "spearman r", "spearman quarters",
+                  "kendall tau", "kendall quarters"
                 ]]
     )
     df_eidos = df_eidos.loc[
         (df_eidos["spearman quarters"] > 20)
     ]
     df_eidos["Score"] = (
-        round(df_eidos["pearson r"] * df_eidos["spearman r"] * 100,2))
+        round(df_eidos["pearson r"] * df_eidos["spearman r"] * df_eidos["kendall tau"] *100,2))
    
     # Retain only the important columns
     df_eidos = (
@@ -113,6 +124,7 @@ def eidos_revenue():
     Total Equities Ranked: {len(df_eidos.index)}
     Missing Pearson Scores: {pearson_fails}
     Missing Spearman Scores: {spearman_fails}
+    Missing Kendall Scores: {kendall_fails}
     Success Rate: {100*round((len(df_eidos.index)-pearson_fails-spearman_fails)/len(df_eidos.index),2)}%
     Time Elapsed: {round(time.time()-start_time,2)} Seconds
     """)
@@ -135,29 +147,39 @@ def eidos_netinc():
     pearson_list, pearson_fails = pearson_ranker(tickerlist,'netincome')    
     print("\nCalculating Spearman linearity")
     spearman_list, spearman_fails = spearman_ranker(tickerlist, 'netincome')
+    print("\nCalculating Kendall's Tau")
+    kendall_list, kendall_fails = kendall_ranker(tickerlist, 'netincome')
 
     # Concatenate dataframes
     df_spearman_netinc = pd.concat(spearman_list, axis = 0)
     df_pearson_netinc = pd.concat(pearson_list, axis = 0)
+    df_kendall_netinc = pd.concat(kendall_list, axis = 0)
 
     # Create Scoresheet
     df_eidos = df_tickers.merge(
         df_spearman_netinc, how="left", left_on="ticker",
         right_on="ticker", suffixes=("_Spearman", "")
     )
+
     df_eidos = df_eidos.merge(
         df_pearson_netinc, how="left", left_on="ticker",
         right_on="ticker", suffixes=("_Pearson", "")
     )
+
+    df_eidos = df_eidos.merge(
+        df_kendall_netinc, how = 'left', left_on = 'ticker',
+        right_on = 'ticker', suffixes = ('_Kendall','')
+        )
     df_eidos = (
-        df_eidos[["ticker", "comp_name_2", "sector", "zacks_x_ind_desc","pearson r",\
-                   "pearson quarters", "spearman r", "spearman quarters"]]
+        df_eidos[["ticker", "comp_name_2", "sector", "zacks_x_ind_desc","pearson r",
+                   "pearson quarters", "spearman r", "spearman quarters",
+                   "kendall tau", "kendall quarters"]]
     )
 
     df_eidos = df_eidos.loc[
         (df_eidos["spearman quarters"] > 20)
     ]
-    df_eidos["Score"] = round(df_eidos["pearson r"] * df_eidos["spearman r"] * 100,2)
+    df_eidos["Score"] = round(df_eidos["pearson r"] * df_eidos["spearman r"] * df_eidos["kendall tau"] * 100,2)
     df_eidos = df_eidos.sort_values(by=("Score"), ascending = False)
     df_eidos = (
         df_eidos
@@ -196,6 +218,7 @@ def eidos_netinc():
     Total Equities Ranked: {len(df_eidos.index)}
     Missing Pearson Scores: {pearson_fails}
     Missing Spearman Scores: {spearman_fails}
+    Missing Kendall Scores: {kendall_fails}
     Success Rate: {100*round((len(df_eidos.index)-pearson_fails-spearman_fails)/len(df_eidos.index),2)}%
     Time Elapsed: {round(time.time()-start_time,2)} Seconds
     """)
@@ -218,25 +241,36 @@ def eidos_eps():
     pearson_list, pearson_fails = pearson_ranker(tickerlist,'eps')    
     print("\nCalculating Spearman linearity")
     spearman_list, spearman_fails = spearman_ranker(tickerlist, 'eps')
+    print("\nCalculating Kendall's Tau")
+    kendall_list, kendall_fails = kendall_ranker(tickerlist, 'eps')
     
     # Concatenate dataframes
     df_spearman_eps = pd.concat(spearman_list, axis = 0)
     df_pearson_eps = pd.concat(pearson_list, axis = 0)
+    df_kendall_eps = pd.concat(kendall_list, axis = 0)
 
     # Create Scoresheet
     df_eidos = df_tickers.merge(
         df_spearman_eps, how="left", left_on="ticker", right_on="ticker", suffixes=("_Spearman", "")
     )
+
     df_eidos = df_eidos.merge(
         df_pearson_eps, how="left", left_on="ticker", right_on="ticker", suffixes=("_Pearson", "")
     )
+
+    df_eidos = df_eidos.merge(
+        df_kendall_eps, how = 'left', left_on = 'ticker',
+        right_on = 'ticker', suffixes = ('_Kendall','')
+        )
+
     df_eidos = (
         df_eidos[["ticker", "comp_name_2", "sector", "zacks_x_ind_desc", "pearson r",
-                "pearson quarters", "spearman r", "spearman quarters"]]
+                "pearson quarters", "spearman r", "spearman quarters", "kendall tau",
+                "kendall quarters"]]
     )
 
     df_eidos = df_eidos.loc[(df_eidos["spearman quarters"] > 20)]
-    df_eidos["Score"] = round(df_eidos["pearson r"] * df_eidos["spearman r"] * 100,2)
+    df_eidos["Score"] = round(df_eidos["pearson r"] * df_eidos["spearman r"] * df_eidos["kendall tau"] * 100,2)
     df_eidos = (
         df_eidos
         .rename(columns = {"comp_name_2":"Company","sector":"Sector","zacks_x_ind_desc":"Industry"})
@@ -271,6 +305,7 @@ def eidos_eps():
     Total Equities Ranked: {len(df_eidos.index)}
     Missing Pearson Scores: {pearson_fails}
     Missing Spearman Scores: {spearman_fails}
+    Missing Kendall Scores: {kendall_fails}
     Success Rate: {100*round((len(df_eidos.index)-pearson_fails-spearman_fails)/len(df_eidos.index),2)}%
     Time Elapsed: {round(time.time()-start_time,2)} Seconds
     """)

@@ -10,18 +10,27 @@ The mainframe through which all MSMF projects will be launched through.
 
 ---
 
+#### General
 + remade folder structure into Codebase
-+ added feedback to eidos calculations
-+ added final timer to lantern fetch
+
+#### Terminal
 + added startup timer for terminal.py
++ aesthetic changes to clearing
++ moved splash to separate function
++ changed imports to load lazily
+
+#### Eidos
++ added feedback to eidos calculations
 + rewrote pearson to 2.2k it/s 
 + rewrote spearman to 2.2k it/s 
++ added Kendalls Tau to Project Eidos
+
+#### Lantern
++ added final timer to lantern fetch
 
 - write function for Lantern html fetch and data formatting
-- run eidos multithreaded to hit 1000 it/s
-- find a way to load imports rather than lazy loading
-- add Kendall's Tau in project Eidos
 - change diagnostics to add Filter Rate & Failure Rate
+- change Eidos scoring to select top 10 from each sector
 
 ### Version: 1.0
 
