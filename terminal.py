@@ -12,7 +12,7 @@ import sys
 import os
 import warnings
 
-from src import splash
+from src import splash # type: ignore
 
 # HACK: Lazy loading Eidos, Lantern and Terra to boost
 # startup time. Change this to multithreaded loading 
@@ -124,7 +124,7 @@ elif item1 == "5":
 elif item1 == "6":
     os.system('cls')
     from src import eidos
-    eidos.eidos_test()
+    eidos.eidos_test() 
 # Info
 elif item1 == "0":
     os.system('cls')

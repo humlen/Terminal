@@ -105,21 +105,28 @@ def eidos_revenue():
     )
     
     # Calculate equity deviance from mean
-    df_eidos["Sector-Adj. Score"] = (
+    df_eidos["Adj. Score"] = (
         (df_eidos["Score"]-df_eidos["Sector Mean"])/df_eidos["Sector StdDev"]
     )
 
     # Create subset with deviation greater than 1
-    df_gold_revenue = (
-        df_eidos[df_eidos["Sector-Adj. Score"] > 1]
-        [["ticker", "Company", "Sector", "Industry", "Score","Sector-Adj. Score"]]
-    )
-    df_gold_revenue = df_gold_revenue.sort_values(by=("Sector-Adj. Score"), ascending = False)
+    #df_revenue = (
+    #    df_eidos[df_eidos["Adj. Score"] > 1]
+    #    [["ticker", "Company", "Sector", "Industry", "Score","Adj. Score"]]
+    #)
+    df_revenue = df_eidos.sort_values(by=("Adj. Score"), ascending = False)
 
     # Print Output
     print("\n \n We were able to locate " +
-    str(len(df_gold_revenue)-1) + " revenue Gold candidates:")
-    print(df_gold_revenue)
+    str(len(df_revenue)-1) + " revenue candidates:")
+   
+    # New method
+    sectorlist = df_revenue.Sector.unique()
+    
+    for sector in sectorlist:
+        print(f"{sector}:")
+        print(df_revenue[df_revenue["Sector"] == sector][["ticker","Company","Adj. Score"]].head(10))
+        print("\n")
 
     # Diagnostics
     print(f"""\nDiagnostics:
@@ -199,21 +206,27 @@ def eidos_netinc():
     )
 
     # Calculate equity deviance from the mean
-    df_eidos["Sector-Adj. Score"] = (
+    df_eidos["Adj. Score"] = (
         (df_eidos["Score"]-df_eidos["Sector Mean"])/df_eidos["Sector StdDev"]
     )
 
     # Create subset with the deviation greater than 1
-    df_gold_netinc = (
-        df_eidos[df_eidos["Sector-Adj. Score"] > 1]
-        [["ticker", "Company", "Sector", "Industry", "Score","Sector-Adj. Score"]]
-    )
-    df_gold_netinc = df_gold_netinc.sort_values(by=("Sector-Adj. Score"), ascending = False)
+    # df_netinc = (
+    #     df_eidos[df_eidos["Adj. Score"] > 1]
+    #     [["ticker", "Company", "Sector", "Industry", "Score","Adj. Score"]]
+    # )
+    df_netinc = df_eidos.sort_values(by=("Adj. Score"), ascending = False)
 
     # Print Output
     print("\nWe were able to locate " + 
-    str(len(df_gold_netinc)-1) + " Net Income Gold candidates:")
-    print(df_gold_netinc)
+    str(len(df_netinc)-1) + " Net Income candidates:")
+    sectorlist = df_netinc.Sector.unique()
+    
+    for sector in sectorlist:
+        print(f"{sector}:")
+        print(df_netinc[df_netinc["Sector"] == sector][["ticker","Company","Adj. Score"]].head(10))
+        print("\n")
+
 
     # Diagnostics
     print(f"""\nDiagnostics:
@@ -286,21 +299,28 @@ def eidos_eps():
     df_eidos["Sector StdDev"] = df_eidos.groupby(["Sector"])["Score"].transform('std')
    
    # Calculate standard deviations above or below sector mean
-    df_eidos["Sector-Adj. Score"] = (
+    df_eidos["Adj. Score"] = (
         (df_eidos["Score"]-df_eidos["Sector Mean"])/df_eidos["Sector StdDev"]
     )
 
     # Selects the candidates with scores more than 1 standard deviation above the mean
-    # and labels them "Gold" category
-    df_gold_eps = (
-        df_eidos[df_eidos["Sector-Adj. Score"] > 1]
-        [["ticker", "Company", "Sector", "Industry", "Score","Sector-Adj. Score"]]
-    )
-    df_gold_eps = df_gold_eps.sort_values(by=("Sector-Adj. Score"), ascending = False)
+    # and labels them top category
+    # df_eps = (
+    #     df_eidos[df_eidos["Adj. Score"] > 1]
+    #     [["ticker", "Company", "Sector", "Industry", "Score","Adj. Score"]]
+    # )
+    df_eps = df_eidos.sort_values(by=("Adj. Score"), ascending = False)
 
     # Print Output
-    print("\n \n We were able to locate " + str(len(df_gold_eps)-1) + " EPS Gold candidates:")
-    print(df_gold_eps)
+    print("\n \n We were able to locate " + str(len(df_eps)-1) + " EPS candidates:")
+    #print(df_eps)
+    sectorlist = df_eps.Sector.unique()
+    
+    for sector in sectorlist:
+        print(f"{sector}:")
+        print(df_eps[df_eps["Sector"] == sector][["ticker","Company","Adj. Score"]].reset_index(drop = True).head(10))
+        print("\n")
+
 
     # Diagnostics
     print(f"""\nDiagnostics:
@@ -311,8 +331,6 @@ def eidos_eps():
     Success Rate: {100*round((len(df_eidos.index)-pearson_fails-spearman_fails)/len(df_eidos.index),2)}%
     Time Elapsed: {round(time.time()-start_time,2)} Seconds
     """)
-
-
 
 
 def eidos_test():

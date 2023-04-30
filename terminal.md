@@ -23,7 +23,8 @@ The mainframe through which all MSMF projects will be launched through.
 + added feedback to eidos calculations
 + rewrote pearson to 2.2k it/s 
 + rewrote spearman to 2.2k it/s 
-+ added Kendalls Tau to Project Eidos
++ added Kendalls Tau to Project eidos
++ now prints top 10 companies of each sector
 
 #### Lantern
 + added final timer to lantern fetch
