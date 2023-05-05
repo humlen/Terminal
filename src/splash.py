@@ -30,4 +30,6 @@ LOGO = """
 """+COLOR_CLOSE+"====================================================================="+"\n"
 
 
-def print_splash(): return LOGO
+def print_splash(): 
+    print(LOGO)
+
