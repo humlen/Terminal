@@ -19,6 +19,9 @@ The mainframe through which all MSMF projects will be launched through.
 + moved splash to separate function
 + changed imports to load lazily
 
+#### Wallet
++ created wallet.py to track holding prices vs price targets
+
 #### Eidos
 + added feedback to eidos calculations
 + rewrote pearson to 2.2k it/s 
