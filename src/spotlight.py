@@ -5,6 +5,7 @@
 A tool to collect basic information about a company, and export it in a format
 compatible with a premade PowerBI-Report
 """
+# TODO: Fix 5Y CAGR FCF 
 
 # Import Packages
 from urllib.request import Request, urlopen
@@ -19,13 +20,13 @@ import numpy as np
 from bs4 import BeautifulSoup
 from .calculations_metrics import calculate_metric_q, calculate_metric_static,\
     calculate_metric_ttm, calculate_quantiles
-from .lantern_output import lantern_writer
+from .spotlight_output import lantern_writer
 
 # Caveats and config
 warnings.filterwarnings("ignore")
 
 # Config
-VERSION_NAME = "Lantern"
+VERSION_NAME = "Spotlight"
 VERSION_NUMBER = "1.0"
 
 

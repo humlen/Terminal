@@ -6,10 +6,10 @@ Tool to keep track of the price of your holdings and their respective price targ
 """
 
 
-# Fetch holdings based on table in database (cockroach serverless?)
+# Create DF with all stonks
 
-# Fetch latest price for holdings
+# Fetch PTs
 
-# Fetch price target for holdings from excel sheets
+# Fetch price
 
-# Print table in terminal
+# Display diff

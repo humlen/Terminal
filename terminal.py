@@ -55,8 +55,8 @@ while True:
         2. Terra
         3. Terra Erdos
     
-       """+COLOR_OPEN+COLOR_ORANGE+"""Project Lantern"""+COLOR_CLOSE+"""
-        4. Lantern Fetch
+       """+COLOR_OPEN+COLOR_ORANGE+"""Project Spotlight"""+COLOR_CLOSE+"""
+        4. Spotlight Search
    
         """+COLOR_OPEN+COLOR_ORANGE+"""Project Eidos"""+COLOR_CLOSE+"""
         5. Eidos Ranker
@@ -155,7 +155,7 @@ while True:
         terra.terra_errors()
         break
 
-    # Project Lantern
+    # Project Spotlight 
     while item1 == "4":
         
         # Initialize Screen
@@ -163,9 +163,9 @@ while True:
         print_splash() 
         
         # Import & Execute desired program
-        from src import lantern
+        from src import spotlight 
         item2 = input("\nWhat ticker would you like to retrieve\n")
-        lantern.illuminate(item2)
+        spotlight.illuminate(item2)
 
         # Exit state
         print('\nPress Q to exit')
