@@ -15,10 +15,9 @@ import warnings
 from src import splash # type: ignore
 import msvcrt as m
 
-# HACK: Lazy loading Eidos, Lantern and Terra to boost
+# WARNING: Lazy loading Eidos, Lantern and Terra to boost
 # startup time. Change this to multithreaded loading 
 # instead.
-
 
 # Get help from other worlds
 sys.path.append("..")

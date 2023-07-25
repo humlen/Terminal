@@ -6,10 +6,15 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
+header = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36",
+    "X-Requested-With": "XMLHttpRequest"
+}
+
 def scrape_mt(link):
 
     dict_items = {}
-    html = requests.get(link, timeout = 10)
+    html = requests.get(link, timeout = 10, headers = header)
     soup = BeautifulSoup(html.text, 'html.parser')
     htmltext = soup.prettify()
 

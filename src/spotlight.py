@@ -5,7 +5,6 @@
 A tool to collect basic information about a company, and export it in a format
 compatible with a premade PowerBI-Report
 """
-# TODO: Fix 5Y CAGR FCF 
 
 # Import Packages
 from urllib.request import Request, urlopen
@@ -39,10 +38,14 @@ def illuminate(ticker):
     """
 
     # Links & Shorthands
-    link_db = "C:/Users/eirik/Codebase/Database"
-    link_pb = "C:/Users/eirik/Codebase/Reports/PowerBI Resources"
+    # link_db = "C:/Users/eirik/Codebase/Database"
+    # link_pb = "C:/Users/eirik/Codebase/Reports/PowerBI Resources"
     link_mt = "https://www.macrotrends.net/stocks/charts"
+    
+    link_db = "../Database"
+    link_pb = "../Reports/PowerBI Resources"
 
+        
     # Definitions
     master_tickers = pd.read_csv(f"{link_db}/master__tickers.csv")
     meta_stock = master_tickers.loc[master_tickers['ticker'] == ticker]

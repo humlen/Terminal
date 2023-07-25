@@ -4,8 +4,8 @@ Writes Lantern data to Excel
 import pandas as pd 
 
 # Variables
-link_pb = "C:/Users/eirik/Codebase/Reports/PowerBI Resources"
-
+# link_pb = "C:/Users/eirik/Codebase/Reports/PowerBI Resources"
+link_pb = "../Reports/PowerBI Resources"
 # Write to Excel
 def lantern_writer(df_is,df_bs,df_cf,df_kr,df_fd,df_pd):
     with pd.ExcelWriter(f'{link_pb}/BDR.xlsx') as writer: # type: ignore

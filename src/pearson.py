@@ -8,7 +8,8 @@ from tqdm import tqdm
 import numpy as np
 
 # Get dataframe from DB
-DB = "C:/Users/eirik/Codebase/Database/"
+# DB = "C:/Users/eirik/Codebase/Database/"
+DB = "../Database/"
 
 def pearson_ranker_old(tickerlist:list, metric):
 

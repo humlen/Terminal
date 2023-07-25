@@ -1,0 +1,45 @@
+
+--------------------------------
+Date: 2023-07-24 09:25:04.445915
+Module : Test Module
+Runtime: 0.49 Seconds
+Success Rate: 100.
+Errors :0
+Data Points: 1
+--------------------------------
+
+--------------------------------
+Date: 2023-07-24 09:25:19.826916
+Module : Test Module
+Runtime: 1.56 Seconds
+Success Rate: 100.
+Errors :0
+Data Points: 5
+--------------------------------
+
+--------------------------------
+Date: 2023-07-24 09:26:44.289190
+Module : Test Module
+Runtime: 0.82 Seconds
+Success Rate: 100.
+Errors :0
+Data Points: 3
+--------------------------------
+
+--------------------------------
+Date: 2023-07-24 09:28:04.553085
+Module : Test Module
+Runtime: 0.78 Seconds
+Success Rate: 100.
+Errors :0
+Data Points: 3
+--------------------------------
+
+--------------------------------
+Date: 2023-07-24 09:31:54.287865
+Module : Test Module
+Runtime: 0.8 Seconds
+Success Rate: 100.
+Errors :0
+Data Points: 3
+--------------------------------

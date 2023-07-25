@@ -7,7 +7,8 @@ from scipy.stats import spearmanr
 from tqdm import tqdm
 
 # Get dataframe from DB
-DB = "C:/Users/eirik/Codebase/Database/"
+# DB = "C:/Users/eirik/Codebase/Database/"
+DB = "../Database/"
 
 def spearman_ranker_old(tickerlist:list, metric):
 

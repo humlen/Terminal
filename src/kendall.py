@@ -7,7 +7,8 @@ from scipy.stats import kendalltau
 from tqdm import tqdm 
 
 
-DB = "C:/Users/eirik/Codebase/Database/"
+# DB = "C:/Users/eirik/Codebase/Database/"
+DB = "../Database/"
 
 def kendall_ranker(tickerlist:list, metric):
     
