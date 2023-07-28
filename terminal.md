@@ -10,6 +10,11 @@ The mainframe through which all MSMF projects will be launched through.
 
 ---
 
+#### Comments
+Moved entire build to a portable version, and forced to run
+on Python 3.8 with pipenv. Lazy loads packages for improved 
+performance. Sped up Ranking algorithm and expanded diagnostics.
+
 #### General
 + remade folder structure into Codebase
 + added relative pathing for multi-platform use
@@ -26,6 +31,7 @@ The mainframe through which all MSMF projects will be launched through.
 + rewrote spearman to 2.2k it/s 
 + added Kendalls Tau to Project eidos
 + now prints top 10 companies of each sector
++ Added equity count and filters to diagnostics
 
 #### Lantern
 + added final timer to lantern fetch
@@ -33,9 +39,6 @@ The mainframe through which all MSMF projects will be launched through.
 + added relative valuation
 
 #### Todo
-- change diagnostics in Terra to add Filter Rate & Failure Rate
-- fix diagnostics in Eidos to accurately reflect missing and removed values
-- change Eidos scoring to select top 10 from each sector
 - check all Spotlight values (ROI & Margins)
 
 ### Version: 1.0 [Live]

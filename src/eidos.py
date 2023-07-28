@@ -8,6 +8,7 @@ import time
 import warnings
 
 import pandas as pd
+from decimal import Decimal
 
 from .kendall import kendall_ranker
 from .pearson import pearson_ranker, pearson_ranker_old
@@ -124,13 +125,17 @@ def eidos_revenue():
         print(df_revenue[df_revenue["Sector"] == sector][["ticker","Company","Adj. Score"]].head(10))
         print("\n")
 
+    filtrations = Decimal(1-(len(df_eidos.ticker.unique()))/(len(tickerlist)))
+
     # Diagnostics
     print(f"""\nDiagnostics:
-    Total Equities Ranked: {len(df_eidos.index)}
+    Total Equities Available: {len(tickerlist)}
+    Total Equities Ranked: {len(df_eidos.ticker.unique())}
     Missing Pearson Scores: {pearson_fails}
     Missing Spearman Scores: {spearman_fails}
     Missing Kendall Scores: {kendall_fails}
     Success Rate: {100*round((len(df_eidos.index)-pearson_fails-spearman_fails)/len(df_eidos.index),2)}%
+    Filter Rate: {100*round(filtrations,2)}%
     Time Elapsed: {round(time.time()-start_time,2)} Seconds
     """)
 
@@ -207,10 +212,6 @@ def eidos_netinc():
     )
 
     # Create subset with the deviation greater than 1
-    # df_netinc = (
-    #     df_eidos[df_eidos["Adj. Score"] > 1]
-    #     [["ticker", "Company", "Sector", "Industry", "Score","Adj. Score"]]
-    # )
     df_netinc = df_eidos.sort_values(by=("Adj. Score"), ascending = False)
 
     # Print Output
@@ -224,15 +225,17 @@ def eidos_netinc():
         print("\n")
 
 
+    filtrations = Decimal(1-(len(df_eidos.ticker.unique()))/(len(tickerlist)))
 
-    # FIX: Reports zero errors despite known failures.
-    # Diagnostics
+
     print(f"""\nDiagnostics:
+    Total Equities Available: {len(df_tickers.index)}
     Total Equities Ranked: {len(df_eidos.index)}
     Missing Pearson Scores: {pearson_fails}
     Missing Spearman Scores: {spearman_fails}
     Missing Kendall Scores: {kendall_fails}
     Success Rate: {100*round((len(df_eidos.index)-pearson_fails-spearman_fails)/len(df_eidos.index),2)}%
+    Filter Rate: {100*round(filtrations,2)}%
     Time Elapsed: {round(time.time()-start_time,2)} Seconds
     """)
 
@@ -301,12 +304,6 @@ def eidos_eps():
         (df_eidos["Score"]-df_eidos["Sector Mean"])/df_eidos["Sector StdDev"]
     )
 
-    # Selects the candidates with scores more than 1 standard deviation above the mean
-    # and labels them top category
-    # df_eps = (
-    #     df_eidos[df_eidos["Adj. Score"] > 1]
-    #     [["ticker", "Company", "Sector", "Industry", "Score","Adj. Score"]]
-    # )
     df_eps = df_eidos.sort_values(by=("Adj. Score"), ascending = False)
 
     # Print Output
@@ -320,13 +317,17 @@ def eidos_eps():
         print("\n")
 
 
+    filtrations = Decimal(1-(len(df_eidos.ticker.unique()))/(len(tickerlist)))
+
     # Diagnostics
     print(f"""\nDiagnostics:
+    Total Equities Available: {len(df_tickers.index)}
     Total Equities Ranked: {len(df_eidos.index)}
     Missing Pearson Scores: {pearson_fails}
     Missing Spearman Scores: {spearman_fails}
     Missing Kendall Scores: {kendall_fails}
     Success Rate: {100*round((len(df_eidos.index)-pearson_fails-spearman_fails)/len(df_eidos.index),2)}%
+    Filter Rate: {100*round(filtrations,2)}%
     Time Elapsed: {round(time.time()-start_time,2)} Seconds
     """)
 
