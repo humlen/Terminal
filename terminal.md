@@ -27,8 +27,7 @@ performance. Sped up Ranking algorithm and expanded diagnostics.
 
 #### Eidos
 + added feedback to eidos calculations
-+ rewrote pearson to 2.2k it/s 
-+ rewrote spearman to 2.2k it/s 
++ rewrote pearson and spearman to 2.2k it/s 
 + added Kendalls Tau to Project eidos
 + now prints top 10 companies of each sector
 + Added equity count and filters to diagnostics
