@@ -6,9 +6,10 @@ The mainframe through which all MSMF projects will be launched through.
 
 ## Changelog
 
-### Version: 1.1 [WIP]
+### Version: 1.1 [Live]
 
 ---
+2023-07-28
 
 #### Comments
 Moved entire build to a portable version, and forced to run
@@ -37,10 +38,7 @@ performance. Sped up Ranking algorithm and expanded diagnostics.
 + moved macrotrends scrape and formatting to function
 + added relative valuation
 
-#### Todo
-- check all Spotlight values (ROI & Margins)
-
-### Version: 1.0 [Live]
+### Version: 1.0 
 
 ---
 2023-04-22
