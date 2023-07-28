@@ -9,7 +9,7 @@ The mainframe through which all MSMF projects will be launched through.
 ### Version: 1.1 [Live]
 
 ---
-2023-07-28
+_Release Date: 2023-07-28_
 
 #### Comments
 Moved entire build to a portable version, and forced to run
@@ -41,6 +41,6 @@ performance. Sped up Ranking algorithm and expanded diagnostics.
 ### Version: 1.0 
 
 ---
-2023-04-22
+_Release Date: 2023-04-22_
 
 + Just been doodling up until this point so I guess the changelog starts here.
