@@ -7,7 +7,6 @@
 import time
 time_launch = time.time()
 
-
 import sys
 import os
 import warnings
@@ -15,13 +14,8 @@ import warnings
 from src import splash # type: ignore
 import msvcrt as m
 
-# WARNING: Lazy loading Eidos, Lantern and Terra to boost
-# startup time. Change this to multithreaded loading 
-# instead.
-
 # Get help from other worlds
 sys.path.append("..")
-# from Confidential.datacollection import terra # type: ignore
 
 # Classic
 warnings.filterwarnings("ignore")
@@ -34,9 +28,9 @@ COLOR_CLOSE = "\x1b[0m"
 COLOR_ORANGE = "0;33;40m"
 COLOR_GREEN = "0;32;40m"
 
-
 # Initialize
 item1 = "0"
+
 
 # Home Screen 
 while True:

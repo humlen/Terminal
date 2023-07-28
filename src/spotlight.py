@@ -62,7 +62,7 @@ def illuminate(ticker):
     link_fv = f"https://finviz.com/quote.ashx?t={ticker}&p=d"
 
     # Variables
-    start_date = "2010-01-01"
+    start_date = "2015-01-01"
 
     # Lists & Counters
     start_time = time.time()

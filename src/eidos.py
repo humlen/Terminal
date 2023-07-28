@@ -109,11 +109,7 @@ def eidos_revenue():
         (df_eidos["Score"]-df_eidos["Sector Mean"])/df_eidos["Sector StdDev"]
     )
 
-    # Create subset with deviation greater than 1
-    #df_revenue = (
-    #    df_eidos[df_eidos["Adj. Score"] > 1]
-    #    [["ticker", "Company", "Sector", "Industry", "Score","Adj. Score"]]
-    #)
+
     df_revenue = df_eidos.sort_values(by=("Adj. Score"), ascending = False)
 
     # Print Output

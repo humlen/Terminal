@@ -12,15 +12,13 @@ The mainframe through which all MSMF projects will be launched through.
 
 #### General
 + remade folder structure into Codebase
++ added relative pathing for multi-platform use
 
 #### Terminal
 + added startup timer for terminal.py
 + aesthetic changes to clearing
 + moved splash to separate function
 + changed imports to load lazily
-
-#### Wallet
-+ created wallet.py to track holding prices vs price targets
 
 #### Eidos
 + added feedback to eidos calculations
@@ -32,12 +30,15 @@ The mainframe through which all MSMF projects will be launched through.
 #### Lantern
 + added final timer to lantern fetch
 + moved macrotrends scrape and formatting to function
++ added relative valuation
 
-
-- change diagnostics to add Filter Rate & Failure Rate
+#### Todo
+- change diagnostics in Terra to add Filter Rate & Failure Rate
+- fix diagnostics in Eidos to accurately reflect missing and removed values
 - change Eidos scoring to select top 10 from each sector
+- check all Spotlight values (ROI & Margins)
 
-### Version: 1.0
+### Version: 1.0 [Live]
 
 ---
 2023-04-22
