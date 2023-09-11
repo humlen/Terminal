@@ -4,14 +4,13 @@
 
 @purpose: act as a terminal launcher for all MSMF Protocols
 """
+
 import time
 time_launch = time.time()
 
 import sys
 import os
 import warnings
-
-from src import splash # type: ignore
 import msvcrt as m
 
 # Get help from other worlds
